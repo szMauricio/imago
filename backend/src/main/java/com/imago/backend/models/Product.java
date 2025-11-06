@@ -3,8 +3,12 @@ package com.imago.backend.models;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.imago.backend.models.enums.Category;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +39,10 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
+
     @Column(nullable = false)
     private Integer stock = 0;
 
@@ -53,11 +61,13 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, BigDecimal price, Integer stock, String imageUrl) {
+    public Product(String name, String description, BigDecimal price, Integer stock, Category category,
+            String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.category = category;
         this.imageUrl = imageUrl;
     }
 
@@ -99,6 +109,14 @@ public class Product {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getImageUrl() {
@@ -143,4 +161,5 @@ public class Product {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }
