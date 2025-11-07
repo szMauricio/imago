@@ -25,3 +25,8 @@ logging:
     "[org.springframework.security]": DEBUG
     "[org.hibernate.SQL]": DEBUG
     "[org.hibernate.type.descriptor.sql.BasicBinder]": TRACE
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:defaultFallbackSecretForDevelopmentOnly123!}
+  expiration: 86400000

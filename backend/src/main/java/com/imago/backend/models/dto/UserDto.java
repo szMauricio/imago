@@ -158,4 +158,22 @@ public class UserDto {
             return role;
         }
     }
+
+    public static class LoginResponse {
+        private String token;
+        private Response user;
+
+        public LoginResponse(String token, Response user) {
+            this.token = token;
+            this.user = user;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public Response getUser() {
+            return user;
+        }
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.imago.backend.models.User;
 import com.imago.backend.models.dto.UserDto;
+import com.imago.backend.services.JwtService;
 import com.imago.backend.services.UserService;
 
 import jakarta.validation.Valid;
@@ -24,9 +25,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
     private final UserService service;
+    private final JwtService jwtService;
 
-    public UserController(UserService service) {
+    public UserController(UserService service, JwtService jwtService) {
         this.service = service;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -45,11 +48,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto.Response> login(@Valid @RequestBody UserDto.LoginRequest request) {
+    public ResponseEntity<UserDto.LoginResponse> login(@Valid @RequestBody UserDto.LoginRequest request) {
         User user = service.validateLogin(request.getEmail(), request.getPassword());
-        UserDto.Response response = new UserDto.Response(user);
+        String token = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(response);
+        UserDto.Response userResponse = new UserDto.Response(user);
+        UserDto.LoginResponse loginResponse = new UserDto.LoginResponse(token, userResponse);
+
+        return ResponseEntity.ok(loginResponse);
     }
 
     @GetMapping

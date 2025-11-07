@@ -2,6 +2,7 @@ package com.imago.backend.services;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.imago.backend.exceptions.EmailAlreadyExistsException;
@@ -14,9 +15,11 @@ import com.imago.backend.repositories.UserRepository;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService {
         if (user.getRole() == null) {
             user.setRole(Role.ROLE_CLIENT);
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return repository.save(user);
     }
@@ -85,7 +89,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User validateLogin(String email, String password) {
-        return repository.findByEmailAndPassword(email, password)
+        User user = repository.findByEmail(email)
                 .orElseThrow(InvalidCredentialsException::new);
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return user;
     }
 }
