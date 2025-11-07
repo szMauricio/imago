@@ -1,22 +1,21 @@
 package com.imago.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Configuration
 public class JwtConfig {
-    private final Dotenv dotenv;
+    @Value("${jwt.secret}")
+    private String secret;
 
-    public JwtConfig(Dotenv dotenv) {
-        this.dotenv = dotenv;
-    }
+    @Value("${jwt.expiration}")
+    private long expiration;
 
     public String getSecret() {
-        return dotenv.get("JWT_SECRET", "fallbackSecretForDevelopment123!");
+        return secret;
     }
 
     public long getExpiration() {
-        return Long.parseLong(dotenv.get("JWT_EXPIRATION", "86400000"));
+        return expiration;
     }
 }

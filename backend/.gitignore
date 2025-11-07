@@ -39,5 +39,6 @@ logs/
 .DS_Store
 Thumbs.db
 
-.env
+application-dev.properties
 *.env
+.env
