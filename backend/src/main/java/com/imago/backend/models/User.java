@@ -25,21 +25,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Email can't be null")
+    @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Name can't be null")
+    @NotBlank(message = "First name is required")
     @Column(nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Lastname can't be null")
+    @NotBlank(message = "Last name is required")
     @Column(nullable = false)
     private String lastName;
 
-    @NotBlank(message = "Password can't be null")
-    @Size(min = 6, message = "Password lenght must be at least 6")
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false)
     private String password;
 

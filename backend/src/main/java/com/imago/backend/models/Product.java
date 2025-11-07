@@ -26,12 +26,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Product name can't be null")
-    @Size(min = 2, max = 100, message = "Name must have between 2 and 100 characters")
+    @NotBlank(message = "Product name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Size(max = 500, message = "Description lenght can't be higher than 500 characters")
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
     @Column(length = 500)
     private String description;
 
