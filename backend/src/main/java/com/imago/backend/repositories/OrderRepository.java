@@ -1,5 +1,6 @@
 package com.imago.backend.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +23,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByOrderNumber(String orderNumber);
 
-    @Query("SELECT o FROM Order o WHERE o.createdAt >= CURRENT_DATE - 30 ORDER BY o.createdAt DESC")
-    List<Order> findRecentOrders();
+    @Query("SELECT o FROM Order o WHERE o.createdAt >= :startDate ORDER BY o.createdAt DESC")
+    List<Order> findRecentOrders(@Param("startDate") LocalDateTime startDate);
+
+    @Query("SELECT o FROM Order o WHERE o.createdAt >= FUNCTION('DATE_SUB', CURRENT_DATE, 30, 'DAY') ORDER BY o.createdAt DESC")
+    List<Order> findRecentOrdersLast30Days();
 
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status = :status")
     Double calculateTotalSalesByStatus(@Param("status") OrderStatus status);
@@ -31,4 +35,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Long countByStatus(OrderStatus status);
 
     List<Order> findByUserAndStatus(User user, OrderStatus status);
+
+    @Query("SELECT o FROM Order o WHERE o.createdAt BETWEEN :startDate AND :endDate ORDER BY o.createdAt DESC")
+    List<Order> findByDateRange(@Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }
